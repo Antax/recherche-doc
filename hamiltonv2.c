@@ -3,75 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 
-/*struct edge{
-    int one;
-    int two;
-};
-
-struct graph{
-    int numOfEdges;
-    int numOfApexes;
-    struct edge *data;
-};
-
-void printEdge(struct edge data){
-    printf("(%d-%d)",data.one,data.two);
-}
-
-void printGraph(struct graph self){
-    for(int i=0;i<self.numOfEdges;++i){
-        printEdge(self.data[i]);
-        printf (" ");
-    }
-}
-
-struct edge createEdge(int a,int b){
-    struct edge data;
-    data.one=a;
-    data.two=b;
-    return data;
-}
-
-struct graph createGraph(){
-    struct graph data;
-    data.numOfApexes=0;
-    data.numOfEdges=0;
-    data.data=malloc(sizeof(struct edge)*100);
-    return data;
-}
-
-void addEdge(struct edge edge,struct graph *graph){
-    bool newApex1=true;
-    bool newApex2=true;
-    for(int i =0;i<graph->numOfEdges;i++){
-        if ((edge.one==graph->data[i].one)||(edge.one==graph->data[i].two)){
-            newApex1=false;
-        }
-        if ((edge.two==graph->data[i].one)||(edge.two==graph->data[i].two)){
-            newApex2=false;
-        }
-    }
-    if(newApex1){
-        graph->numOfApexes++;
-    }
-    if(newApex2){
-        graph->numOfApexes++;
-    }
-    printf("%d\n",graph->numOfApexes);
-    graph->data[graph->numOfEdges]=edge;
-    graph->numOfEdges++;
-}
-*/
 int main (){
-    /*struct graph gr=createGraph();
-    struct edge ed1=createEdge(1,2);
-    struct edge ed2=createEdge(1,3);
-    struct edge ed3=createEdge(2,3);
-    addEdge(ed1,&gr);
-    addEdge(ed2,&gr);
-    addEdge(ed3,&gr);
-    printGraph(gr);
-    printf("%d",gr.numOfApexes);*/
+    
 
     FILE * in;
     /* open the file for writing*/
@@ -83,75 +16,7 @@ int main (){
 
     printf("number of apexes :\n");
     int n=(int)(getc(stdin))-48;
-    printf("******%d*******\n",n);
     fprintf (in, "p cnf %d 100\n",n*n);
-
-    /*int edges[n*n+1];
-
-    edges[0]=4654;
-
-    //1
-    edges[1]=0;
-    edges[2]=1;
-    edges[3]=0;
-    edges[4]=0;
-    edges[5]=0;
-    edges[6]=0;
-    edges[7]=0;
-
-    //2
-    edges[8]=1;
-    edges[9]=0;
-    edges[10]=1;
-    edges[11]=0;
-    edges[12]=0;
-    edges[13]=0;
-    edges[14]=0;
-
-    //3
-    edges[15]=0;
-    edges[16]=1;
-    edges[17]=0;
-    edges[18]=0;
-    edges[19]=1;
-    edges[20]=0;
-    edges[21]=0;
-
-    //4
-    edges[22]=0;
-    edges[23]=0;
-    edges[24]=0;
-    edges[25]=0;
-    edges[26]=1;
-    edges[27]=1;
-    edges[28]=1;
-
-    //5
-    edges[29]=0;
-    edges[30]=0;
-    edges[31]=1;
-    edges[32]=1;
-    edges[33]=0;
-    edges[34]=1;
-    edges[35]=0;
-
-    //6
-    edges[36]=0;
-    edges[37]=0;
-    edges[38]=0;
-    edges[39]=1;
-    edges[40]=1;
-    edges[41]=0;
-    edges[42]=0;
-
-    //7
-    edges[43]=0;
-    edges[44]=0;
-    edges[45]=0;
-    edges[46]=1;
-    edges[47]=0;
-    edges[48]=1;
-    edges[49]=0;*/
 
     int edges[n*n+1];
     edges[0]=45687;
@@ -185,11 +50,11 @@ int main (){
         return 1;
         perror("fopen");
     }
-    fprintf(graph1,"digraph G {\n");
+    fprintf(graph1,"graph G {\n");
     for(int i=0;i<n;++i){
         for(int j=i+1;j<n+1;++j){
             if(edges[i*n+j]==1){
-                fprintf(graph1,"%d -> %d;\n",i+1,j);
+                fprintf(graph1,"%d -- %d;\n",i+1,j);
             }
         }
     }
