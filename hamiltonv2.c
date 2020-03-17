@@ -158,8 +158,14 @@ int main (){
 
     char trueFalse= 0;
 
+    /*Remplissage du tableau d'entiers*/
+    //initialisation a 0
+    for(int i=1;i<=n*n;++i){
+        edges[i]=0;
+    }
+    
     for(int i=0;i<n;i++){
-        for(int j=1;j<n+1;++j){
+        for(int j=i+1;j<n+1;++j){
             if(j==i+1){
                 edges[i*n+j]=0;
             }else{
@@ -167,12 +173,29 @@ int main (){
                 scanf(" %c", &trueFalse);
                 if(trueFalse=='t'){
                     edges[i*n+j]=1;
-                }else{
-                    edges[i*n+j]=0;
+                    edges[(j-1)*n+i+1]=1;
                 }
             }
         }
     }
+
+    /*Ecriture du fichier graphviz de base*/
+    FILE *graph1=fopen("graph1.txt","w");
+    if(graph1==NULL){
+        return 1;
+        perror("fopen");
+    }
+    fprintf(graph1,"digraph G {\n");
+    for(int i=0;i<n;++i){
+        for(int j=i+1;j<n+1;++j){
+            if(edges[i*n+j]==1){
+                fprintf(graph1,"%d -> %d;\n",i+1,j);
+            }
+        }
+    }
+    fprintf(graph1,"}\n");
+
+    fclose(graph1);
 
     //pas plus d'un sommet par etape du chemin
     //5 car 5 etapes puisque 5 noeuds
