@@ -15,7 +15,11 @@ int main (){
     out = fopen("hamiltonv2.out", "r");
 
     printf("number of apexes :\n");
-    int n=(int)(getc(stdin))-48;
+    char buf[256];
+    scanf("%s", buf);
+    int n=strtol(buf,NULL,10);
+    //int n=(int)(getc(stdin))-48;
+    printf("%i",n);
     fprintf (in, "p cnf %d 100\n",n*n);
 
     int edges[n*n+1];
