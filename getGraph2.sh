@@ -39,7 +39,10 @@ then
         read -r FOLLOWING<hamiltonv2.out
         getFollowingApex
         echo "$CURRENT THEN $FOLLOWING"
-        sed -i "s/$CURRENT -- $FOLLOWING/$CURRENT -- $FOLLOWING [color=red]/g;" 'graph2.txt'
-        sed -i "s/$FOLLOWING -- $CURRENT/$FOLLOWING -- $CURRENT [color=red]/g;" 'graph2.txt'
+        sed -i "s/$CURRENT -- $FOLLOWING;/$CURRENT -- $FOLLOWING [color=red]/g;" 'graph2.txt'
+        sed -i "s/$FOLLOWING -- $CURRENT;/$FOLLOWING -- $CURRENT [color=red]/g;" 'graph2.txt'
     done
+else
+    echo 'Erreur le graph n est pas hamiltonien';
+    exit;
 fi
