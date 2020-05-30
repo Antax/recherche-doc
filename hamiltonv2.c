@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-int main (){
+int main (int argc, char *argv[]){
     
 
     FILE * in;
@@ -14,57 +14,100 @@ int main (){
     /* open the file for reading*/
     out = fopen("hamiltonv2.out", "r");
 
-    printf("number of apexes :\n");
-    char buf[256];
-    scanf("%s", buf);
-    int n=strtol(buf,NULL,10);
-    //int n=(int)(getc(stdin))-48;
-    printf("%i",n);
+    int n = strtol(argv[1],NULL,10);
+
     fprintf (in, "p cnf %d 100\n",n*n);
 
     int edges[n*n+1];
-    edges[0]=45687;
+    edges[0]=163546;
 
     char trueFalse= 0;
 
-    /*Remplissage du tableau d'entiers*/
-    //initialisation a 0
-    for(int i=1;i<=n*n;++i){
-        edges[i]=0;
-    }
-    
-    for(int i=0;i<n;i++){
-        for(int j=i+1;j<n+1;++j){
-            if(j==i+1){
-                edges[i*n+j]=0;
-            }else{
-                printf("{%d-%d} t or f\n",i+1,j);
-                scanf(" %c", &trueFalse);
-                if(trueFalse=='t'){
-                    edges[i*n+j]=1;
-                    edges[(j-1)*n+i+1]=1;
+    /*Ecriture du fichier graphviz de base*/
+    if(argc==2){
+        /*Remplissage du tableau d'entiers*/
+        //initialisation a 0
+        for(int i=1;i<=n*n;++i){
+            edges[i]=0;
+        }
+        
+        for(int i=0;i<n;i++){
+            for(int j=i+1;j<n+1;++j){
+                if(j==i+1){
+                    edges[i*n+j]=0;
+                }else{
+                    printf("{%d-%d} t or f\n",i+1,j);
+                    scanf(" %c", &trueFalse);
+                    if(trueFalse=='t'){
+                        edges[i*n+j]=1;
+                        edges[(j-1)*n+i+1]=1;
+                    }
                 }
             }
         }
-    }
 
-    /*Ecriture du fichier graphviz de base*/
-    FILE *graph1=fopen("graph1.txt","w");
-    if(graph1==NULL){
-        return 1;
-        perror("fopen");
-    }
-    fprintf(graph1,"graph G {\n");
-    for(int i=0;i<n;++i){
-        for(int j=i+1;j<n+1;++j){
-            if(edges[i*n+j]==1){
-                fprintf(graph1,"%d -- %d;\n",i+1,j);
+        FILE *graph1=fopen("graph1.txt","w");
+        if(graph1==NULL){
+            return 1;
+            perror("fopen");
+        }
+        fprintf(graph1,"graph G {\n");
+        for(int i=0;i<n;++i){
+            for(int j=i+1;j<n+1;++j){
+                if(edges[i*n+j]==1){
+                    fprintf(graph1,"%d -- %d;\n",i+1,j);
+                }
             }
         }
-    }
-    fprintf(graph1,"}\n");
+        fprintf(graph1,"}\n");
 
-    fclose(graph1);
+        fclose(graph1);
+    }else{//ecriture dans edges a partir du graph en entree
+        for(int i=1;i<=n*n;++i){
+            edges[i]=0;
+        }
+        //lecture ligne par ligne dans le graph envoye en argument
+        
+        FILE *file = fopen ( argv[2], "r" );
+        if ( file != NULL )
+        {
+            char line [ 128 ]; 
+            int firstApex=0,secondApex=0;
+            while ( fgets ( line, sizeof line, file ) != NULL ) 
+            {
+                if(line[0]>'0'&&line[0]<'9'){
+                    //Parcours de line pour affectuer les bonnes valeurs a firstApex et secondApex
+                    firstApex=0;
+                    secondApex=0;
+                    int current=0;
+                    //first apex
+                    while(line[current]>'0'&&line[current]<'9'){
+                        firstApex=firstApex*10+line[current]-'0';
+                        ++current;
+                    }
+
+                    //Search for start of second Apex
+                    while(line[current]<'0'||line[current]>'9'){
+                        ++current;
+                    }
+                    
+                    //Second Apex
+                    while(line[current]>'0'&&line[current]<'9'){
+                        secondApex=secondApex*10+line[current]-'0';
+                        ++current;
+                    }
+                    edges[(firstApex-1)*n+secondApex]=1;
+                    edges[(secondApex-1)*n+firstApex]=1;
+                }
+            }
+            fclose ( file );
+        }
+        else
+        {
+            perror ( argv[2] ); 
+        }
+    }
+    
 
     //pas plus d'un sommet par etape du chemin
     //5 car 5 etapes puisque 5 noeuds

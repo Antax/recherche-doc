@@ -16,14 +16,19 @@ getFollowingApex(){
     fi
 }
 
-
+if test $# -eq 2
+then 
+    GRAPH=$2
+else
+    GRAPH='graph1.txt'
+fi
 
 GRAPHSIZE=$1
 read -r firstline<hamiltonv2.out
 if test $firstline = 'SAT'
 then
     #copie de graph1 dans graph2
-    cp 'graph1.txt' 'graph2.txt'
+    cp "$GRAPH" 'graph2.txt'
     #change format of the .out
     sed -z -i 's/SAT\n//g;' 'hamiltonv2.out'
     sed -i 's/ /\n/g;' 'hamiltonv2.out'
