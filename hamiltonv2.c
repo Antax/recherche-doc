@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 
 int main (int argc, char *argv[]){
     
+    srand ( time ( NULL));
 
     FILE * in;
     /* open the file for writing*/
@@ -21,7 +23,7 @@ int main (int argc, char *argv[]){
     int edges[n*n+1];
     edges[0]=163546;
 
-    char trueFalse= 0;
+    //char trueFalse= 0;
 
     /*Ecriture du fichier graphviz de base*/
     if(argc==2){
@@ -31,21 +33,18 @@ int main (int argc, char *argv[]){
             edges[i]=0;
         }
         
-        for(int i=0;i<n;i++){
-            for(int j=i+1;j<n+1;++j){
-                if(j==i+1){
-                    edges[i*n+j]=0;
-                }else{
-                    printf("{%d-%d} t or f\n",i+1,j);
-                    scanf(" %c", &trueFalse);
-                    if(trueFalse=='t'){
-                        edges[i*n+j]=1;
-                        edges[(j-1)*n+i+1]=1;
+        for(size_t i=1;i<=n;++i){
+            for(size_t j=1;j<=n;++j){
+                if(i!=j){
+                    double random_value;
+                    random_value = (double)rand()/RAND_MAX*1.0;
+                    if(random_value<0.08){
+                        edges[(i-1)*n+j]=1;
+                        edges[(j-1)*n+i]=1;
                     }
                 }
             }
         }
-
         FILE *graph1=fopen("graph1.txt","w");
         if(graph1==NULL){
             return 1;
@@ -60,9 +59,8 @@ int main (int argc, char *argv[]){
             }
         }
         fprintf(graph1,"}\n");
-
         fclose(graph1);
-    }else{//ecriture dans edges a partir du graph en entree
+    }else{  //ecriture dans edges a partir du graph en entree
         for(int i=1;i<=n*n;++i){
             edges[i]=0;
         }
@@ -71,17 +69,17 @@ int main (int argc, char *argv[]){
         FILE *file = fopen ( argv[2], "r" );
         if ( file != NULL )
         {
-            char line [ 128 ]; 
+            char line [ 1024 ]; 
             int firstApex=0,secondApex=0;
             while ( fgets ( line, sizeof line, file ) != NULL ) 
             {
-                if(line[0]>'0'&&line[0]<'9'){
+                if(line[0]>='0'&&line[0]<='9'){
                     //Parcours de line pour affectuer les bonnes valeurs a firstApex et secondApex
                     firstApex=0;
                     secondApex=0;
                     int current=0;
                     //first apex
-                    while(line[current]>'0'&&line[current]<'9'){
+                    while(line[current]>='0'&&line[current]<='9'){
                         firstApex=firstApex*10+line[current]-'0';
                         ++current;
                     }
@@ -92,7 +90,7 @@ int main (int argc, char *argv[]){
                     }
                     
                     //Second Apex
-                    while(line[current]>'0'&&line[current]<'9'){
+                    while(line[current]>='0'&&line[current]<='9'){
                         secondApex=secondApex*10+line[current]-'0';
                         ++current;
                     }
@@ -107,7 +105,6 @@ int main (int argc, char *argv[]){
             perror ( argv[2] ); 
         }
     }
-    
 
     //pas plus d'un sommet par etape du chemin
     //5 car 5 etapes puisque 5 noeuds
